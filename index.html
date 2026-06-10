@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blueprint v2 — Incoming Freshman → AI Founder</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080b0f;
+  --surface: #0e1318;
+  --surface2: #141b22;
+  --border: #1e2a35;
+  --border2: #253040;
+  --accent: #00e5a0;
+  --accent2: #ff5f3d;
+  --accent3: #4db8ff;
+  --accent4: #ffd24d;
+  --text: #e8edf2;
+  --muted: #5a7080;
+  --muted2: #2a3a48;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+a { color: var(--accent3); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* === HEADER === */
+header {
+  position: relative;
+  padding: 72px 56px 56px;
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+header::before {
+  content: '';
+  position: absolute;
+  top: -200px; right: -200px;
+  width: 700px; height: 700px;
+  background: conic-gradient(from 180deg at 50% 50%, rgba(0,229,160,0.04) 0deg, rgba(77,184,255,0.04) 120deg, rgba(0,229,160,0.04) 240deg, transparent 360deg);
+  pointer-events: none;
+}
+.version-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1px solid rgba(0,229,160,0.3);
+  background: rgba(0,229,160,0.05);
+  padding: 5px 12px;
+  margin-bottom: 28px;
+}
+.version-badge::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(42px, 6vw, 88px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin-bottom: 20px;
+}
+h1 em { font-style: italic; font-family: 'Instrument Serif', serif; font-weight: 400; color: var(--accent); }
+.header-sub {
+  font-size: 15px;
+  color: var(--muted);
+  max-width: 580px;
+  line-height: 1.75;
+  font-weight: 400;
+}
+.profile-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 28px;
+}
+.ptag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  padding: 4px 10px;
+  border: 1px solid var(--border2);
+  color: var(--muted);
+  background: var(--surface);
+}
+.ptag.live { border-color: rgba(0,229,160,0.4); color: var(--accent); background: rgba(0,229,160,0.06); }
+
+/* === NAV === */
+nav {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: rgba(8,11,15,0.95);
+  backdrop-filter: blur(12px);
+  z-index: 100;
+}
+nav::-webkit-scrollbar { display: none; }
+.nb {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  border-right: 1px solid var(--border);
+  color: var(--muted);
+  padding: 14px 22px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.nb:hover { color: var(--text); background: var(--surface); }
+.nb.active { color: var(--accent); background: var(--surface); border-bottom: 2px solid var(--accent); }
+
+/* === SECTIONS === */
+.section { display: none; padding: 52px 56px; max-width: 1400px; }
+.section.active { display: block; }
+.sec-head { margin-bottom: 40px; }
+.sec-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.sec-title {
+  font-size: clamp(30px, 4vw, 50px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: 10px;
+}
+.sec-desc { font-size: 15px; color: var(--muted); max-width: 600px; line-height: 1.75; }
+
+/* === INFOBOX === */
+.infobox {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent3);
+  padding: 16px 20px;
+  margin-bottom: 32px;
+  font-size: 13.5px;
+  color: var(--muted);
+  line-height: 1.75;
+}
+.infobox.warn { border-left-color: var(--accent2); }
+.infobox.gold { border-left-color: var(--accent4); }
+.infobox strong { color: var(--text); }
+
+/* === COMPETITION CARDS === */
+.comp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-bottom: 48px;
+}
+.comp-card {
+  background: var(--surface);
+  padding: 26px;
+  position: relative;
+  transition: background 0.15s;
+}
+.comp-card:hover { background: var(--surface2); }
+.deadline-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  margin-bottom: 14px;
+}
+.deadline-badge.open { background: rgba(0,229,160,0.1); border: 1px solid rgba(0,229,160,0.3); color: var(--accent); }
+.deadline-badge.open::before { content: '●'; font-size: 8px; }
+.deadline-badge.soon { background: rgba(255,95,61,0.1); border: 1px solid rgba(255,95,61,0.3); color: var(--accent2); }
+.deadline-badge.upcoming { background: rgba(255,210,77,0.1); border: 1px solid rgba(255,210,77,0.3); color: var(--accent4); }
+.comp-name { font-size: 18px; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.01em; }
+.comp-type {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.comp-body { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 14px; }
+.comp-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.comp-meta-row {
+  display: flex;
+  gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+}
+.comp-meta-key { color: var(--muted); width: 70px; flex-shrink: 0; }
+.comp-meta-val { color: var(--text); }
+.comp-meta-val a { color: var(--accent3); }
+.urgency-HIGH .comp-name { color: var(--accent); }
+
+/* === ML LADDER === */
+.ladder {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 48px;
+}
+.rung {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 0;
+  background: var(--border);
+}
+@media(max-width:600px) { .rung { grid-template-columns: 1fr; } }
+.rung-phase {
+  background: var(--surface);
+  padding: 22px 24px;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.rung-phase-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+.rung-phase-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+}
+.rung-phase-time {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.rung-content {
+  background: var(--surface);
+  padding: 22px 26px;
+}
+.rung-title { font-size: 16px; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.01em; }
+.rung-body { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 12px; }
+.rung-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.topic-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 3px 9px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  color: var(--text);
+}
+.topic-tag.done { border-color: rgba(0,229,160,0.4); color: var(--accent); }
+.topic-tag.active { border-color: rgba(255,210,77,0.5); color: var(--accent4); background: rgba(255,210,77,0.05); }
+.rung-link { margin-top: 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+
+/* === SCHEDULE TABLE === */
+.week-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 48px;
+  border: 1px solid var(--border);
+}
+.week-table th {
+  background: var(--surface2);
+  padding: 12px 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.week-table td {
+  padding: 14px 16px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  line-height: 1.6;
+}
+.week-table tr:last-child td { border-bottom: none; }
+.week-table tr:hover td { background: var(--surface); }
+.wk { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent); font-weight: 500; }
+.wk-focus { font-weight: 700; color: var(--text); }
+.wk-note { color: var(--muted); font-size: 12px; margin-top: 3px; }
+.wk-hack { color: var(--accent2); font-weight: 600; }
+
+/* === SALARY BARS === */
+.salary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-bottom: 48px;
+}
+.salary-card {
+  background: var(--surface);
+  padding: 28px;
+  transition: background 0.15s;
+}
+.salary-card:hover { background: var(--surface2); }
+.sal-rank { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.1em; margin-bottom: 10px; }
+.sal-title { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 6px; }
+.sal-range {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.sal-senior {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--accent4);
+  margin-bottom: 14px;
+}
+.sal-why { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 14px; }
+.sal-bar-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.sal-bar-track {
+  height: 4px;
+  background: var(--muted2);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+.sal-bar-fill { height: 100%; border-radius: 2px; }
+.sal-bar-fill.green { background: var(--accent); }
+.sal-bar-fill.blue { background: var(--accent3); }
+.sal-bar-fill.gold { background: var(--accent4); }
+
+/* === PROGRAMS === */
+.prog-list { display: flex; flex-direction: column; gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 48px; }
+.prog-row {
+  background: var(--surface);
+  padding: 22px 28px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: start;
+  transition: background 0.15s;
+}
+.prog-row:hover { background: var(--surface2); }
+.prog-name { font-size: 16px; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.01em; }
+.prog-host { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--accent3); letter-spacing: 0.08em; margin-bottom: 8px; }
+.prog-desc { font-size: 13px; color: var(--muted); line-height: 1.65; }
+.prog-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 5px 10px;
+  border: 1px solid;
+  white-space: nowrap;
+  letter-spacing: 0.05em;
+  align-self: flex-start;
+}
+.prog-badge.open { border-color: rgba(0,229,160,0.4); color: var(--accent); }
+.prog-badge.next { border-color: rgba(255,210,77,0.4); color: var(--accent4); }
+.prog-badge.plan { border-color: var(--border2); color: var(--muted); }
+
+/* === TIMELINE (enhanced) === */
+.tl { position: relative; padding-left: 40px; margin-bottom: 48px; }
+.tl::before { content: ''; position: absolute; left: 4px; top: 8px; bottom: 8px; width: 1px; background: var(--border2); }
+.tl-item { position: relative; margin-bottom: 44px; }
+.tl-dot {
+  position: absolute;
+  left: -44px;
+  top: 6px;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  border: 2px solid var(--bg);
+}
+.tl-dot.g { background: var(--accent); }
+.tl-dot.b { background: var(--accent3); }
+.tl-dot.o { background: var(--accent2); }
+.tl-dot.y { background: var(--accent4); }
+.tl-year {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 2px;
+}
+.tl-theme { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 14px; }
+.tl-targets { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.tlt { font-size: 12px; padding: 4px 10px; background: var(--surface2); border: 1px solid var(--border2); }
+.tlt.g { border-color: rgba(0,229,160,0.3); color: var(--accent); }
+.tlt.b { border-color: rgba(77,184,255,0.3); color: var(--accent3); }
+.tlt.o { border-color: rgba(255,95,61,0.3); color: var(--accent2); }
+.tlt.y { border-color: rgba(255,210,77,0.3); color: var(--accent4); }
+.tl-body { font-size: 13.5px; color: var(--muted); line-height: 1.75; }
+
+/* === COLLEGE === */
+.college-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-bottom: 48px;
+}
+.col-card { background: var(--surface); padding: 26px; transition: background 0.15s; }
+.col-card:hover { background: var(--surface2); }
+.col-icon { font-size: 24px; margin-bottom: 10px; }
+.col-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+.col-body { font-size: 13px; color: var(--muted); line-height: 1.7; }
+.col-tip {
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: rgba(0,229,160,0.05);
+  border-left: 2px solid var(--accent);
+  font-size: 12px;
+  color: var(--accent);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* === BOOKS === */
+.book-list { display: flex; flex-direction: column; gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 48px; }
+.book-row {
+  background: var(--surface);
+  padding: 18px 26px;
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  gap: 18px;
+  align-items: center;
+  transition: background 0.15s;
+}
+.book-row:hover { background: var(--surface2); }
+.book-n { font-family: 'JetBrains Mono', monospace; font-size: 22px; color: var(--muted2); font-weight: 500; }
+.book-t { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+.book-a { font-size: 12px; color: var(--muted); }
+.book-why-text { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.book-when {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 4px 9px;
+  border: 1px solid var(--border2);
+  color: var(--muted);
+  white-space: nowrap;
+  align-self: flex-start;
+}
+.book-when.now { border-color: rgba(0,229,160,0.4); color: var(--accent); }
+
+/* === QUOTE === */
+.big-q {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(24px, 3.5vw, 44px);
+  color: var(--muted);
+  line-height: 1.3;
+  margin: 48px 0;
+  max-width: 800px;
+  border-left: 3px solid var(--accent);
+  padding-left: 28px;
+}
+.big-q em { color: var(--accent); font-style: italic; }
+
+/* === DAILY SCHEDULE === */
+.day-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-bottom: 48px;
+}
+.day-block { background: var(--surface); padding: 20px; }
+.day-time { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--accent); letter-spacing: 0.1em; margin-bottom: 6px; }
+.day-activity { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.day-detail { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+/* === DIVIDER === */
+hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+/* === FOOTER === */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 28px 56px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.ft { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 0.06em; }
+
+/* === ANIMS === */
+.section.active .comp-card,
+.section.active .salary-card,
+.section.active .prog-row,
+.section.active .book-row,
+.section.active .col-card,
+.section.active .tl-item,
+.section.active .rung,
+.section.active .day-block,
+.section.active tbody tr { animation: fu 0.35s ease both; }
+.section.active .comp-card:nth-child(1){animation-delay:.04s}
+.section.active .comp-card:nth-child(2){animation-delay:.08s}
+.section.active .comp-card:nth-child(3){animation-delay:.12s}
+.section.active .comp-card:nth-child(4){animation-delay:.16s}
+.section.active .comp-card:nth-child(5){animation-delay:.20s}
+.section.active .comp-card:nth-child(6){animation-delay:.24s}
+.section.active .comp-card:nth-child(7){animation-delay:.28s}
+.section.active .comp-card:nth-child(8){animation-delay:.32s}
+.section.active .rung:nth-child(1){animation-delay:.04s}
+.section.active .rung:nth-child(2){animation-delay:.09s}
+.section.active .rung:nth-child(3){animation-delay:.14s}
+.section.active .rung:nth-child(4){animation-delay:.19s}
+.section.active .rung:nth-child(5){animation-delay:.24s}
+.section.active .rung:nth-child(6){animation-delay:.29s}
+.section.active tbody tr:nth-child(1){animation-delay:.04s}
+.section.active tbody tr:nth-child(2){animation-delay:.07s}
+.section.active tbody tr:nth-child(3){animation-delay:.10s}
+.section.active tbody tr:nth-child(4){animation-delay:.13s}
+.section.active tbody tr:nth-child(5){animation-delay:.16s}
+.section.active tbody tr:nth-child(6){animation-delay:.19s}
+.section.active tbody tr:nth-child(7){animation-delay:.22s}
+.section.active tbody tr:nth-child(8){animation-delay:.25s}
+.section.active tbody tr:nth-child(9){animation-delay:.28s}
+.section.active tbody tr:nth-child(10){animation-delay:.31s}
+@keyframes fu { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="version-badge">Blueprint v2 · Fully Researched · June 2026</div>
+  <h1>Incoming Freshman<br>→ <em>AI Founder</em></h1>
+  <p class="header-sub">Every competition has a verified open deadline. Every salary figure comes from 2026 market data. Every skill is sequenced around what you're already doing — linear algebra for Harvard ML. This is your full, research-backed plan for the next 15 years.</p>
+  <div class="profile-bar">
+    <span class="ptag live">Already: Linear Algebra for ML</span>
+    <span class="ptag live">Target: Harvard ML Course</span>
+    <span class="ptag">4–6 hrs/day this summer</span>
+    <span class="ptag">AI / Entrepreneurship track</span>
+    <span class="ptag">Hackathon-first strategy</span>
+    <span class="ptag">Top 25–50 college target</span>
+    <span class="ptag">Financial freedom driven</span>
+  </div>
+</header>
+
+<nav>
+  <button class="nb active" onclick="show('comps')">01 · Live Competitions</button>
+  <button class="nb" onclick="show('ml')">02 · ML Learning Path</button>
+  <button class="nb" onclick="show('schedule')">03 · Summer Schedule</button>
+  <button class="nb" onclick="show('programs')">04 · Programs</button>
+  <button class="nb" onclick="show('highschool')">05 · 4-Year Plan</button>
+  <button class="nb" onclick="show('skills')">06 · Skills & Salaries</button>
+  <button class="nb" onclick="show('books')">07 · Reading List</button>
+  <button class="nb" onclick="show('college')">08 · College Strategy</button>
+</nav>
+
+<!-- ==================== SECTION 1: COMPETITIONS ==================== -->
+<div id="comps" class="section active">
+  <div class="sec-head">
+    <div class="sec-label">01 · Live Competitions</div>
+    <div class="sec-title">Compete This Summer</div>
+    <p class="sec-desc">Every competition below has a verified open or upcoming registration window as of June 2026. Deadlines are real. Sorted by urgency — highest first.</p>
+  </div>
+
+  <div class="infobox gold">
+    <strong>Strategy:</strong> Your goal this summer is to complete at least 2 competitions — one online hackathon to get your first rep in, and the Congressional App Challenge as your big fall target. The CAC is the single most valuable competition for your college application because winners get displayed in the U.S. Capitol and are honored by their Congress member. Start building your app now so it's polished by October.
+  </div>
+
+  <div class="comp-grid">
+
+    <div class="comp-card urgency-HIGH">
+      <div class="deadline-badge open">OPEN NOW — Register Today</div>
+      <div class="comp-name">Congressional App Challenge 2026</div>
+      <div class="comp-type">App Development · National · Highly Prestigious</div>
+      <div class="comp-body">Build an app in any language (Python works), submit it, and winners are displayed in the U.S. Capitol and honored by their Member of Congress. One of the most college-application-impactful competitions for a CS student. This is your #1 fall target — start building now and submit in October. Registration and the submission window are both open right now.</div>
+      <div class="comp-meta">
+        <div class="comp-meta-row"><span class="comp-meta-key">Deadline</span><span class="comp-meta-val">October 26, 2026 — plenty of time to build</span></div>
+        <div class="comp-meta-row"><span class="comp-meta-key">Format</span><span class="comp-meta-val">Individual or team (up to 4), any programming language</span></div>
+        <div class="comp-meta-row"><span class="comp-meta-key">Prize</span><span class="comp-meta-val">Capitol display, Congressional recognition, national exposure</span></div>
+        <div class="comp-meta-row"><span class="comp-meta-key">Link</span><span class="comp-meta-val"><a href="https://www.congressionalappchallenge.us/students/student-registration/" target="_blank">congressionalappchallenge.us →</a></span></div>
+      </div>
+    </div>
+
+    <div class="comp-card urgency-HIGH">
+      <div class="deadline-badge open">OPEN NOW — Online</div>
+      <div class="comp-name">vsHacks</div>
+      <div class="comp-type">Hackathon · Online · Beginner Friendly</div>
+      <div class="comp-body">Fully online hackathon, perfect for your first real competition. Build something over a weekend with your team. Online format means zero travel commitment — just you, your laptop, and 24–36 hours of building. This is the best entry point for an incoming freshman: low stakes, high learning, and you'll have a project for your GitHub afterward.</div>
+      <div class="comp-meta">
+        <div class="comp-meta-row"><span class="comp-meta-key">Date</span><span class="comp-meta-val">July 11–12, 2026</span></div>
+        <div class="comp-meta-row"><span class="comp-meta-key">Format</span><span class="comp-meta-val">Online, team or solo</span></div>
+        <div class="comp-meta-row"><span class="comp-meta-key">Link</span><span class="comp-meta-val"><a href="https://vshacks.com/" target="_blank">vshacks.com →</a></span></div>
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="deadline-badge open">OPEN NOW — Month-Long</div>
+      <div class="comp-name">Hack the Arts</div>
+      <div class="comp-type">Hackathon · Online · 31-Day Format</div>
+      <div class="comp-body">Month-long online hackathon running July 1 through August 1. The extended format is ideal for a first hackathon — you have time to actually build something polished rather than scrambling overnight. Build at your own pace over 4 weeks alongside your daily learning schedule. Great project for your portfolio.</div>
+      <div class="comp-meta">
+        <div class="comp-meta-row"><span class="comp-meta-key">Date</span><span class="comp-meta-val">July 1 – August 1, 2026</span></div>
+        <div class="comp-meta-row"><span class="comp-meta-key">Format</span><span class="comp-meta-val">Online, any team size</span></div>
+        <div class="comp-meta-row"><span class="comp-meta-key">Link</span><span class="comp-meta-val"><a href="https://www.hackthearts.net" target="_blank">hackthearts.net →</a></span></div>
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="deadline-badge open">OPEN — Register by July</div>
+      <div class="comp-name">Kaggle: Titanic + House Prices</div>
+      <div class="comp-type">ML Competition · Always Open · Skill-Builder</div>
+      <div class="comp-body">Kaggle's two permanent beginner competitions. Titanic (binary classification) and House Prices (regression) are the canonical entry points into ML competitions — every data scientist has done them. They never close. After your linear algebra, use these to apply your first ML models in scikit-learn. Your score doesn't matter; finishing does. Puts ML competition experience on your resume immediately.</div>
+      <div class="comp-meta">
+        <div class="comp-meta-row"><span class="comp-meta-key">Deadline</span><span class="comp-meta-val">Always open — start anytime</span></div>
+        <div class="comp-meta-row"><span class="comp-meta-key">Format</span><span class="comp-meta-val">Individual, Python/R notebooks</span></div>
+        <div class="comp-meta-row"><span class="comp-meta-key">Link</span><span class="comp-meta-val"><a href="https://www.kaggle.com/competitions" target="_blank">kaggle.com/competitions →</a></span></div>
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="deadline-badge open">OPEN — Multiple Sessions</div>
+      <div class="comp-name">Hack Club Hackathons</div>
+      <div class="comp-type">Hackathon · In-Person + Online · High School Only</div>
+      <div class="comp-body">Hack Club's verified calendar shows multiple upcoming events: FireHacks (July 11, Mountain View CA), MarinHacks (Aug 2, Kentfield CA), Code Arizona (Aug 15, Scottsdale), and more. The Hack Club community is genuinely the best high school tech network in the world — members go on to found companies and attend top schools. Sign up for their Slack now even before your first event.</div>
+      <div class="comp-meta">
+        <div class="comp-meta-row"><span class="comp-meta-key">Next events</span><span class="comp-meta-val">July 11, Aug 2, Aug 15, Sep 26+</span></div>
+        <div class="comp-meta-row"><span class="comp-meta-key">Format</span><span class="comp-meta-val">In-person, teams of 2–4</span></div>
+        <div class="comp-meta-row"><span class="comp-meta-key">Link</span><span class="comp-meta-val"><a href="https://hackathons.hackclub.com/" target="_blank">hackathons.hackclub.com →</a></span></div>
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="deadline-badge open">OPEN — Online AI Platform</div>
+      <div class="comp-name">Lablab.ai AI Hackathons</div>
+      <div class="comp-type">AI Hackathon · Online · Sponsored by AI Companies</div>
+      <div class="comp-body">Running continuous AI-focused hackathons online, sponsored by companies like OpenAI, Anthropic, and Cohere. These are perfectly matched to your AI/ML interest — you'll build real AI applications using frontier APIs. Winning or placing in an AI-company-sponsored hackathon as a freshman is an extraordinary resume item. Check for active events and register for the next one.</div>
+      <div class="comp-meta">
+        <div class="comp-meta-row"><span class="comp-meta-key">Deadline</span><span class="comp-meta-val">Rolling — check site for active events</span></div>
+        <div class="comp-meta-row"><span class="comp-meta-key">Format</span><span class="comp-meta-val">Online, team-based, AI-focused</span></div>
+        <div class="comp-meta-row"><span class="comp-meta-key">Link</span><span class="comp-meta-val"><a href="https://lablab.ai/event" target="_blank">lablab.ai/event →</a></span></div>
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="deadline-badge upcoming">PLAN FOR FALL 2026</div>
+      <div class="comp-name">Presidential AI Challenge (2027 Cycle)</div>
+      <div class="comp-type">AI Competition · National · K-12 · Build + Propose</div>
+      <div class="comp-body">The 2026 cycle registration is closed. BUT — the 2027 cycle will open in September 2026, right as school starts. This is a government-backed national AI challenge with state and regional championships, and winners receive an all-expenses-paid trip to Washington D.C. and $10,000. Use this summer to build the skills and the project concept so you're ready to dominate when registration opens in September.</div>
+      <div class="comp-meta">
+        <div class="comp-meta-row"><span class="comp-meta-key">Register</span><span class="comp-meta-val">Opens September 2026 for 2027 cycle</span></div>
+        <div class="comp-meta-row"><span class="comp-meta-key">Prize</span><span class="comp-meta-val">$10,000 + D.C. trip for national winners</span></div>
+        <div class="comp-meta-row"><span class="comp-meta-key">Link</span><span class="comp-meta-val"><a href="https://www.ai.gov/initiatives/presidential-challenge" target="_blank">ai.gov/initiatives →</a></span></div>
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="deadline-badge upcoming">PLAN FOR FALL 2026</div>
+      <div class="comp-name">DECA Competition Circuit</div>
+      <div class="comp-type">Business + Entrepreneurship · School Year · High Prestige</div>
+      <div class="comp-body">DECA combines your business and sales strengths with structured competition in entrepreneurship, marketing, and business development. Join your school's chapter in September — competitions run through the school year, culminating at state and international conferences. Pairing DECA with your technical skills makes you a standout competitor. The "Entrepreneurship" event type was literally made for your profile.</div>
+      <div class="comp-meta">
+        <div class="comp-meta-row"><span class="comp-meta-key">When</span><span class="comp-meta-val">Join chapter in September, compete Oct–April</span></div>
+        <div class="comp-meta-row"><span class="comp-meta-key">Format</span><span class="comp-meta-val">In-person role-plays and case studies</span></div>
+        <div class="comp-meta-row"><span class="comp-meta-key">Link</span><span class="comp-meta-val"><a href="https://www.deca.org" target="_blank">deca.org →</a></span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="big-q">The incoming freshman who wins a Congressional App Challenge and places in two hackathons doesn't need a <em>perfect GPA</em> — they need a compelling story. Build that story now.</div>
+</div>
+
+<!-- ==================== SECTION 2: ML LEARNING PATH ==================== -->
+<div id="ml" class="section">
+  <div class="sec-head">
+    <div class="sec-label">02 · ML Learning Path</div>
+    <div class="sec-title">Your ML Ladder</div>
+    <p class="sec-desc">You're already on Phase 2. This is your full progression from where you are now to LLM engineering — the skill commanding $195K–$350K+ in 2026 market data.</p>
+  </div>
+
+  <div class="infobox">
+    <strong>Where you stand:</strong> You're doing linear algebra to prep for Harvard's ML course. That's Phase 2 of 6. Most people who want to "learn AI" skip Phases 1–3 entirely and wonder why nothing makes sense. You're doing it right. The ladder below shows you exactly where this leads and what to do in each phase.
+  </div>
+
+  <div class="ladder">
+
+    <div class="rung">
+      <div class="rung-phase">
+        <div class="rung-phase-num">PHASE 01</div>
+        <div class="rung-phase-name">COMPLETE</div>
+        <div class="rung-phase-time">Already done</div>
+      </div>
+      <div class="rung-content">
+        <div class="rung-title">Python Fundamentals</div>
+        <div class="rung-body">Variables, functions, loops, data structures, file I/O, OOP. You've been through this with Scratch and Python basics. The goal now is speed and fluency — writing Python without thinking about syntax.</div>
+        <div class="rung-topics">
+          <span class="topic-tag done">Variables + Types</span>
+          <span class="topic-tag done">Functions + Scope</span>
+          <span class="topic-tag done">Lists + Dicts</span>
+          <span class="topic-tag done">Loops + Conditionals</span>
+          <span class="topic-tag done">Basic OOP</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="rung">
+      <div class="rung-phase">
+        <div class="rung-phase-num">PHASE 02</div>
+        <div class="rung-phase-name">IN PROGRESS</div>
+        <div class="rung-phase-time">Right now</div>
+      </div>
+      <div class="rung-content">
+        <div class="rung-title">Linear Algebra + Calculus for ML</div>
+        <div class="rung-body">Vectors, matrices, matrix multiplication, dot products, eigenvectors, eigenvalues. Derivatives, chain rule, partial derivatives, gradient descent. This is the mathematical engine behind every neural network. You're building the foundation that makes ML non-mysterious. Harvard's ML course requires exactly this.</div>
+        <div class="rung-topics">
+          <span class="topic-tag active">Vectors + Matrices</span>
+          <span class="topic-tag active">Matrix Multiplication</span>
+          <span class="topic-tag active">Dot Products</span>
+          <span class="topic-tag">Eigenvectors/values</span>
+          <span class="topic-tag">Derivatives + Chain Rule</span>
+          <span class="topic-tag">Gradient Descent</span>
+        </div>
+        <div class="rung-link">▶ Resource: <a href="https://www.3blue1brown.com/topics/linear-algebra" target="_blank">3Blue1Brown: Essence of Linear Algebra</a> (watch alongside your prep)</div>
+      </div>
+    </div>
+
+    <div class="rung">
+      <div class="rung-phase">
+        <div class="rung-phase-num">PHASE 03</div>
+        <div class="rung-phase-name">NEXT UP</div>
+        <div class="rung-phase-time">Summer Month 2</div>
+      </div>
+      <div class="rung-content">
+        <div class="rung-title">NumPy + Pandas + Data Visualization</div>
+        <div class="rung-body">The Python scientific stack — how you actually work with data in ML. NumPy implements the linear algebra you just learned. Pandas handles real-world datasets. Matplotlib/Seaborn visualizes your findings. Every ML project in the world uses these. Do the Kaggle micro-courses on these — free, hands-on, and fast.</div>
+        <div class="rung-topics">
+          <span class="topic-tag">NumPy arrays + ops</span>
+          <span class="topic-tag">Pandas DataFrames</span>
+          <span class="topic-tag">Data cleaning</span>
+          <span class="topic-tag">Matplotlib basics</span>
+          <span class="topic-tag">Feature engineering</span>
+        </div>
+        <div class="rung-link">▶ Resource: <a href="https://www.kaggle.com/learn" target="_blank">Kaggle Learn (free micro-courses)</a> — Pandas, NumPy, Data Visualization</div>
+      </div>
+    </div>
+
+    <div class="rung">
+      <div class="rung-phase">
+        <div class="rung-phase-num">PHASE 04</div>
+        <div class="rung-phase-name">THIS SUMMER</div>
+        <div class="rung-phase-time">Summer Month 3</div>
+      </div>
+      <div class="rung-content">
+        <div class="rung-title">Classical ML (scikit-learn) + Harvard Course</div>
+        <div class="rung-body">Linear/logistic regression, decision trees, random forests, SVMs, k-means clustering, PCA. This is where Harvard's ML course lives. Scikit-learn is the standard library for classical ML. After this phase, you can enter Kaggle competitions and build real ML pipelines. This is the unlock that transforms you from someone who knows Python to someone who builds ML systems.</div>
+        <div class="rung-topics">
+          <span class="topic-tag">Linear Regression</span>
+          <span class="topic-tag">Logistic Regression</span>
+          <span class="topic-tag">Random Forests</span>
+          <span class="topic-tag">Cross-validation</span>
+          <span class="topic-tag">Feature selection</span>
+          <span class="topic-tag">scikit-learn pipelines</span>
+          <span class="topic-tag">Kaggle Titanic</span>
+        </div>
+        <div class="rung-link">▶ Primary: Harvard ML Course + <a href="https://www.kaggle.com/competitions/titanic" target="_blank">Kaggle Titanic competition</a></div>
+      </div>
+    </div>
+
+    <div class="rung">
+      <div class="rung-phase">
+        <div class="rung-phase-num">PHASE 05</div>
+        <div class="rung-phase-name">SOPHOMORE YEAR</div>
+        <div class="rung-phase-time">9th → 10th grade</div>
+      </div>
+      <div class="rung-content">
+        <div class="rung-title">Deep Learning with PyTorch</div>
+        <div class="rung-body">Neural networks, backpropagation, CNNs (images), RNNs/LSTMs (sequences), transformers. PyTorch is the dominant framework in research and increasingly in production. The 2026 market data is clear: PyTorch production experience adds $15,000–$25,000 to job offers vs. TensorFlow-only candidates. Learn it early and learn it properly. fast.ai's course is the best free deep learning curriculum in the world.</div>
+        <div class="rung-topics">
+          <span class="topic-tag">Neural Networks</span>
+          <span class="topic-tag">PyTorch tensors</span>
+          <span class="topic-tag">CNNs</span>
+          <span class="topic-tag">Transfer learning</span>
+          <span class="topic-tag">Transformers basics</span>
+          <span class="topic-tag">GPU training</span>
+        </div>
+        <div class="rung-link">▶ Resource: <a href="https://course.fast.ai/" target="_blank">fast.ai — Practical Deep Learning (free)</a> + PyTorch docs</div>
+      </div>
+    </div>
+
+    <div class="rung">
+      <div class="rung-phase">
+        <div class="rung-phase-num">PHASE 06</div>
+        <div class="rung-phase-name">JUNIOR YEAR</div>
+        <div class="rung-phase-time">11th grade +</div>
+      </div>
+      <div class="rung-content">
+        <div class="rung-title">LLMs, Fine-tuning + RAG + MLOps</div>
+        <div class="rung-body">LLM fine-tuning ($195K–$350K specialty in 2026), Retrieval-Augmented Generation (the architecture behind most enterprise AI in 2026), vector databases, prompt engineering at infrastructure level, and MLOps (deploying models to production with Kubeflow/SageMaker). This is the tier where you stop being a student and start being hireable at frontier AI companies. Specialists here earn 40–60% above baseline ML salaries.</div>
+        <div class="rung-topics">
+          <span class="topic-tag">LLM fine-tuning (LoRA)</span>
+          <span class="topic-tag">RAG architecture</span>
+          <span class="topic-tag">Vector databases</span>
+          <span class="topic-tag">Hugging Face</span>
+          <span class="topic-tag">MLOps / deployment</span>
+          <span class="topic-tag">LangChain / LlamaIndex</span>
+        </div>
+        <div class="rung-link">▶ Resource: <a href="https://www.deeplearning.ai/short-courses/" target="_blank">DeepLearning.AI short courses (Andrew Ng)</a> — LLM fine-tuning + RAG tracks</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="big-q">The people who understood <em>why</em> deep learning works — the math, not just the API call — will be the ones other people pay to think in 2030 and beyond.</div>
+</div>
+
+<!-- ==================== SECTION 3: SUMMER SCHEDULE ==================== -->
+<div id="schedule" class="section">
+  <div class="sec-head">
+    <div class="sec-label">03 · Summer Schedule</div>
+    <div class="sec-title">Week by Week</div>
+    <p class="sec-desc">10 weeks, 4–6 hours/day, sequenced to build on each other. By September you will have: finished linear algebra, started ML, shipped a project, competed in at least one hackathon, and read two books.</p>
+  </div>
+
+  <div class="infobox">
+    <strong>Your daily rhythm:</strong> 30 min reading (before screen) → 90 min focused learning (linear algebra / ML / Harvard course) → 90 min building (project or Kaggle) → 60 min reviewing / documenting on GitHub. On hackathon weeks, drop everything else and go all-in.
+  </div>
+
+  <div class="day-grid">
+    <div class="day-block">
+      <div class="day-time">6–7 AM or whenever you wake</div>
+      <div class="day-activity">Read (30 min)</div>
+      <div class="day-detail">Business book, 10 pages minimum. Before any screen time. This builds your mental models quietly in the background.</div>
+    </div>
+    <div class="day-block">
+      <div class="day-time">Block 1 (90 min)</div>
+      <div class="day-activity">Focused Learning</div>
+      <div class="day-detail">Linear algebra, then Harvard ML course. Watch video, pause, write notes, code along. No multitasking. Phone in another room.</div>
+    </div>
+    <div class="day-block">
+      <div class="day-time">Block 2 (90 min)</div>
+      <div class="day-activity">Project Building</div>
+      <div class="day-detail">Kaggle competition, your API project, or Congressional App Challenge work. This is where skills become real artifacts.</div>
+    </div>
+    <div class="day-block">
+      <div class="day-time">Block 3 (60 min)</div>
+      <div class="day-activity">Review + GitHub</div>
+      <div class="day-detail">Commit code, write a brief comment in your project log, review what you learned today. Consistency here builds your GitHub history.</div>
+    </div>
+  </div>
+
+  <table class="week-table">
+    <thead>
+      <tr>
+        <th>Week</th>
+        <th>Primary Focus</th>
+        <th>Project / Competition</th>
+        <th>Reading</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="wk">WK 1–2</span></td>
+        <td><span class="wk-focus">Linear Algebra Deep Dive</span><div class="wk-note">Eigenvectors, matrix ops, gradient descent intuition. 3Blue1Brown + textbook exercises.</div></td>
+        <td>Set up GitHub. Push first Python scripts.</td>
+        <td>Zero to One — begin</td>
+      </tr>
+      <tr>
+        <td><span class="wk">WK 3</span></td>
+        <td><span class="wk-focus">Calculus for ML</span><div class="wk-note">Chain rule, partial derivatives, backprop intuition. This unlocks Harvard ML course Week 1.</div></td>
+        <td>Kaggle: Register for Titanic competition. Read others' notebooks without copying.</td>
+        <td>Zero to One — finish</td>
+      </tr>
+      <tr>
+        <td><span class="wk">WK 4</span></td>
+        <td><span class="wk-focus">NumPy + Pandas</span><div class="wk-note">Kaggle micro-courses. Apply linear algebra in code. Manipulate real datasets for the first time.</div></td>
+        <td><span class="wk-hack">★ Hack the Arts begins (July 1)</span> — ideate and plan your project</td>
+        <td>The Lean Startup — begin</td>
+      </tr>
+      <tr>
+        <td><span class="wk">WK 5</span></td>
+        <td><span class="wk-focus">Harvard ML Course — Start</span><div class="wk-note">Begin the actual course. Your linear algebra prep makes Week 1 feel natural instead of overwhelming.</div></td>
+        <td>Hack the Arts — build your project. Congressional App Challenge — register now.</td>
+        <td>The Lean Startup — finish</td>
+      </tr>
+      <tr>
+        <td><span class="wk">WK 6</span></td>
+        <td><span class="wk-focus">Harvard ML — Linear/Logistic Regression</span><div class="wk-note">Implement from scratch in NumPy before using scikit-learn. Understanding > tools.</div></td>
+        <td><span class="wk-hack">★ vsHacks July 11–12</span> — your first hackathon. Commit fully.</td>
+        <td>Rich Dad Poor Dad — begin</td>
+      </tr>
+      <tr>
+        <td><span class="wk">WK 7</span></td>
+        <td><span class="wk-focus">Harvard ML — Trees + Ensembles</span><div class="wk-note">Decision trees, random forests, gradient boosting. The most powerful classical ML methods.</div></td>
+        <td>Hack the Arts — final project push. Kaggle Titanic — submit first model.</td>
+        <td>Rich Dad Poor Dad — finish</td>
+      </tr>
+      <tr>
+        <td><span class="wk">WK 8</span></td>
+        <td><span class="wk-focus">Harvard ML — Neural Networks intro</span><div class="wk-note">First exposure to neural nets. This is the preview of Phase 5 (PyTorch) that you'll go deep on sophomore year.</div></td>
+        <td><span class="wk-hack">★ Hack Club event (MarinHacks Aug 2 or Code Arizona Aug 15)</span></td>
+        <td>The Almanack of Naval — begin</td>
+      </tr>
+      <tr>
+        <td><span class="wk">WK 9</span></td>
+        <td><span class="wk-focus">Build Your API Project</span><div class="wk-note">Use OpenAI or Anthropic API. Build a tool that actually does something. Add a simple web front end. Push to GitHub with a README.</div></td>
+        <td>Congressional App Challenge — begin building your app. Finalize your idea this week.</td>
+        <td>The Almanack of Naval — continue</td>
+      </tr>
+      <tr>
+        <td><span class="wk">WK 10</span></td>
+        <td><span class="wk-focus">Review + Document + Plan Fall</span><div class="wk-note">Review everything you built. Polish your GitHub. Write a project description for each repo. Plan your DECA and school year activities.</div></td>
+        <td>Congressional App Challenge — active development begins. Continue through October.</td>
+        <td>Hard Thing About Hard Things — start</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="infobox gold">
+    <strong>What September looks like if you execute this:</strong> You have a GitHub with 3+ repos, a Kaggle profile with a completed competition, experience from at least one hackathon, two books finished, Harvard ML course partially or fully complete, and a Congressional App Challenge project actively in development. That is an extraordinary freshman profile. Nobody in your school will have this.
+  </div>
+</div>
+
+<!-- ==================== SECTION 4: PROGRAMS ==================== -->
+<div id="programs" class="section">
+  <div class="sec-head">
+    <div class="sec-label">04 · Programs</div>
+    <div class="sec-title">Summer & Year-Round Programs</div>
+    <p class="sec-desc">Programs are ranked by selectivity and college-application impact. Some are still accepting applications for this summer; others are your targets for next year.</p>
+  </div>
+
+  <div class="infobox warn">
+    <strong>Reality check:</strong> Most elite programs (CMU AI Scholars, RSI, PRIMES) have passed their 2026 deadlines. Your targets this summer are Inspirit AI (still open), Hack Club events, and self-directed Kaggle/Harvard work. The programs below are your roadmap for every year of high school.
+  </div>
+
+  <div class="prog-list">
+
+    <div class="prog-row">
+      <div>
+        <div class="prog-name">Inspirit AI — AI Scholars Live Online</div>
+        <div class="prog-host">Stanford + MIT founders · inspirit.ai</div>
+        <div class="prog-desc">Multiple 2-week sessions still available this summer (June 29–July 10, July 13–24, July 27–Aug 7, Aug 10–21). Taught by Stanford/MIT/Harvard graduate students in small groups (5:1 ratio). Hands-on AI projects with real-world applications. The program isn't ultra-selective, but the mentors and project experience are genuine and useful for your portfolio. Consider the June or July session.</div>
+      </div>
+      <div class="prog-badge open">OPEN NOW</div>
+    </div>
+
+    <div class="prog-row">
+      <div>
+        <div class="prog-name">Hack Club — Join the Community</div>
+        <div class="prog-host">hackclub.com · Free · Online + Local Chapters</div>
+        <div class="prog-desc">Not a formal program — something better. Hack Club is the community of the most ambitious high school builders in the world. Join their Slack (free), participate in their hackathons, apply for Hack Club Bank if you want to start a club at your school. Members routinely attend MIT, Stanford, and Carnegie Mellon. The network you build here is more valuable than any single program.</div>
+      </div>
+      <div class="prog-badge open">JOIN TODAY</div>
+    </div>
+
+    <div class="prog-row">
+      <div>
+        <div class="prog-name">Harvard Pre-College (Online)</div>
+        <div class="prog-host">Harvard University · online.harvard.edu</div>
+        <div class="prog-desc">Given you're already prepping for a Harvard ML course, explore Harvard's online pre-college offerings. Some courses in CS and data science are available with rolling enrollment. Taking and completing a Harvard course as an incoming freshman — and adding it to your transcript or application — is a meaningful signal. Check for open CS/AI courses this summer.</div>
+      </div>
+      <div class="prog-badge open">CHECK NOW</div>
+    </div>
+
+    <div class="prog-row">
+      <div>
+        <div class="prog-name">MIT BWSI — Beaver Works Summer Institute</div>
+        <div class="prog-host">MIT Lincoln Laboratory · bwsi.mit.edu</div>
+        <div class="prog-desc">4-week intensive at MIT for rising juniors and seniors. AI, robotics, cybersecurity, autonomous vehicles. One of the most prestigious high school STEM programs in the country. 2026 summer is closed, but the online prerequisite courses are still open — start them now so you're positioned for 2027. Completing the prerequisite course is required before you can apply for the summer program.</div>
+      </div>
+      <div class="prog-badge next">TARGET: 2027</div>
+    </div>
+
+    <div class="prog-row">
+      <div>
+        <div class="prog-name">Carnegie Mellon AI Scholars</div>
+        <div class="prog-host">Carnegie Mellon University · Fully Funded</div>
+        <div class="prog-desc">Free 4-week residential AI program at CMU for rising 11th/12th graders (must be 16+ by June 20, U.S. citizen). Covers ML fundamentals, neural networks, and real project development. Application deadline is February 1. Start preparing your application materials in November of 10th grade — this is one of the most valuable programs you can attend for both learning and college positioning.</div>
+      </div>
+      <div class="prog-badge next">APPLY FEB 2027</div>
+    </div>
+
+    <div class="prog-row">
+      <div>
+        <div class="prog-name">MIT PRIMES — Research Program</div>
+        <div class="prog-host">MIT Mathematics + CS · Highly Selective · Free</div>
+        <div class="prog-desc">Year-long research program with MIT mentors in math and CS, including ML/AI tracks. One of the most elite high school research programs in the country. Acceptance here essentially guarantees admission to top universities. Apply in 10th grade. The application requires strong math and CS fundamentals — start building those now so your 10th-grade application is competitive.</div>
+      </div>
+      <div class="prog-badge plan">APPLY 10TH GRADE</div>
+    </div>
+
+    <div class="prog-row">
+      <div>
+        <div class="prog-name">Research Science Institute (RSI)</div>
+        <div class="prog-host">MIT Campus · Most Selective HS Program in U.S.</div>
+        <div class="prog-desc">6-week summer research program at MIT, free and fully competitive. RSI alumni have won more Nobel Prizes per capita than any other program. Apply in 11th grade. Every year of building, coding, and competing you do now is preparation for this application. A strong RSI application needs a portfolio of real projects and competition results — which is exactly what your roadmap builds.</div>
+      </div>
+      <div class="prog-badge plan">APPLY 11TH GRADE</div>
+    </div>
+
+    <div class="prog-row">
+      <div>
+        <div class="prog-name">Google CSSI / Microsoft Programs</div>
+        <div class="prog-host">Google · Microsoft · Big Tech Programs</div>
+        <div class="prog-desc">Google's CSSI (Computer Science Summer Institute) is a 3-week program for graduating seniors planning to study CS. Microsoft runs similar programs. These are pipelines — participants often get internship offers the following year. Apply in 12th grade. Your 3+ years of building and competing by then will make your application exceptional.</div>
+      </div>
+      <div class="prog-badge plan">APPLY 12TH GRADE</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ==================== SECTION 5: HIGH SCHOOL PLAN ==================== -->
+<div id="highschool" class="section">
+  <div class="sec-head">
+    <div class="sec-label">05 · High School Plan</div>
+    <div class="sec-title">4 Years, 1 Story</div>
+    <p class="sec-desc">Each year has a theme that builds on the last. By senior year your application tells a single, coherent narrative: technically exceptional builder who started at 14 and never stopped.</p>
+  </div>
+
+  <div class="tl">
+
+    <div class="tl-item">
+      <div class="tl-dot g"></div>
+      <div class="tl-year">9th Grade — 2026–27</div>
+      <div class="tl-theme">THEME: BUILD THE FOUNDATION</div>
+      <div class="tl-targets">
+        <span class="tlt g">Finish linear algebra + Harvard ML</span>
+        <span class="tlt g">Congressional App Challenge</span>
+        <span class="tlt g">2+ hackathons competed</span>
+        <span class="tlt">GitHub with 5+ repos</span>
+        <span class="tlt">Join or found a tech/AI club</span>
+        <span class="tlt">Kaggle Titanic + House Prices</span>
+        <span class="tlt">Read 4 business books</span>
+        <span class="tlt g">DECA — join in September</span>
+      </div>
+      <div class="tl-body">This year is about establishing habits, building consistency, and getting your first real wins on paper. Most 9th graders are doing nothing of substance. You will have completed a Harvard-level ML course, competed in national competitions, and have a GitHub profile that makes college admissions sit up straight. The Congressional App Challenge is your flagship goal — start building now, submit in October. Document everything. Every project, every competition result, every book — it all compounds.</div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot b"></div>
+      <div class="tl-year">10th Grade — 2027–28</div>
+      <div class="tl-theme">THEME: DIFFERENTIATE + WIN</div>
+      <div class="tl-targets">
+        <span class="tlt b">Start PyTorch + deep learning</span>
+        <span class="tlt b">Win or place in a hackathon</span>
+        <span class="tlt b">Build something with real users</span>
+        <span class="tlt">Apply to MIT PRIMES + BWSI</span>
+        <span class="tlt">DECA District/State competitions</span>
+        <span class="tlt b">First real ML project deployed</span>
+        <span class="tlt">Take AP CS A + AP Statistics</span>
+      </div>
+      <div class="tl-body">Now you separate. While your classmates are doing basic coding clubs, you're building deployed ML applications and winning hackathons. Apply to MIT BWSI (prerequisite courses start now) and MIT PRIMES this year. Try to build a product — even something small — that has actual users outside your friend group. Even 20 people using a tool you built is an extraordinary story for a 10th grader. Kaggle: aim for your first Top 25% finish in a competition.</div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot y"></div>
+      <div class="tl-year">11th Grade — 2028–29</div>
+      <div class="tl-theme">THEME: RESEARCH + CREDIBILITY</div>
+      <div class="tl-targets">
+        <span class="tlt y">Research position (university or company)</span>
+        <span class="tlt y">LLMs + RAG + fine-tuning</span>
+        <span class="tlt y">Apply to RSI + CMU AI Scholars</span>
+        <span class="tlt">Major hackathon win</span>
+        <span class="tlt y">Presidential AI Challenge</span>
+        <span class="tlt">DECA State/International</span>
+        <span class="tlt">Start college essay drafts</span>
+      </div>
+      <div class="tl-body">This is your most important year. A research position — even unpaid, even one afternoon a week at a local university — transforms your application narrative. Email CS professors at nearby universities in January of junior year. Reference your GitHub. Professors are often happy to have talented students who can actually code. Your personal statement should practically write itself by now: 3 years of building, multiple competitions, real projects. Start writing in the summer after 10th grade.</div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot o"></div>
+      <div class="tl-year">12th Grade — 2029–30</div>
+      <div class="tl-theme">THEME: HARVEST + APPLY + LAUNCH</div>
+      <div class="tl-targets">
+        <span class="tlt o">Ship your best project yet</span>
+        <span class="tlt o">Apply Early Decision / Action</span>
+        <span class="tlt o">Apply to Google CSSI</span>
+        <span class="tlt">First real income stream</span>
+        <span class="tlt o">Major competition win as capstone</span>
+        <span class="tlt">Mentor younger students</span>
+      </div>
+      <div class="tl-body">You're applying from a position of absolute strength. 4 years of building, LLM engineering skills, multiple hackathon wins, research experience, a deployed product, DECA competition history, and a GitHub that reads like a professional's. Apply Early Decision to your top school. Apply to Google CSSI to start positioning for Big Tech internships in college. Consider starting a real freelance or consulting engagement — even small — to demonstrate you can generate income from your skills.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ==================== SECTION 6: SKILLS + SALARIES ==================== -->
+<div id="skills" class="section">
+  <div class="sec-head">
+    <div class="sec-label">06 · Skills & Salaries</div>
+    <div class="sec-title">What the Market Pays</div>
+    <p class="sec-desc">All salary data sourced from 2026 market reports: Glassdoor June 2026, Signify Technology 2026, KORE1 2026. These are real numbers, not projections.</p>
+  </div>
+
+  <div class="infobox">
+    <strong>The most important 2026 data point:</strong> Average AI engineer salary surged to $206,000 in 2025 — a $50,000 jump in a single year. Demand outpaces supply by 3.2:1 globally. LLM fine-tuning specialists command 40–60% above baseline ML salaries ($195K–$350K). You are entering this field at the perfect moment — in 10 years, when you're entering senior-level roles, the skill compounding you start now will put you in a completely different earning tier than your peers.
+  </div>
+
+  <div class="salary-grid">
+
+    <div class="salary-card">
+      <div class="sal-rank">01 · HIGHEST CEILING</div>
+      <div class="sal-title">ML / AI Engineer</div>
+      <div class="sal-range">Base: $128K–$186K (avg) · Entry: $113K</div>
+      <div class="sal-senior">Senior FAANG: $320K–$550K total comp (equity + bonus)</div>
+      <div class="sal-why">The core of everything. Building, training, fine-tuning, and deploying ML models. Glassdoor June 2026 shows average total comp at $202,331. Senior roles at frontier AI labs (OpenAI, Anthropic, Google DeepMind) regularly exceed $400K. Employment growing at 10.8% annually through 2030 — far above any other field. This is your primary skill axis.</div>
+      <div class="sal-bar-label">10-Year Longevity</div>
+      <div class="sal-bar-track"><div class="sal-bar-fill green" style="width:96%"></div></div>
+      <div class="sal-bar-label">Demand Growth (10yr)</div>
+      <div class="sal-bar-track"><div class="sal-bar-fill gold" style="width:100%"></div></div>
+    </div>
+
+    <div class="salary-card">
+      <div class="sal-rank">02 · HIGHEST SPECIALTY PREMIUM</div>
+      <div class="sal-title">LLM Fine-tuning / RAG Engineer</div>
+      <div class="sal-range">$195K–$350K · 40–60% above baseline ML</div>
+      <div class="sal-senior">This is 2026's highest-premium AI specialty</div>
+      <div class="sal-why">LLM fine-tuning and RAG architecture is now described as "table stakes" at senior level in 2026. Engineers who understand vector databases, embedding models, and RAG infrastructure — not just API wrappers — command enormous premiums. This is Phase 6 of your ML ladder and your senior-year target skill. Prompt engineering roles grew 135.8% this year alone.</div>
+      <div class="sal-bar-label">10-Year Longevity</div>
+      <div class="sal-bar-track"><div class="sal-bar-fill green" style="width:90%"></div></div>
+      <div class="sal-bar-label">2026 Demand</div>
+      <div class="sal-bar-track"><div class="sal-bar-fill gold" style="width:100%"></div></div>
+    </div>
+
+    <div class="salary-card">
+      <div class="sal-rank">03 · FOUNDER-CRITICAL</div>
+      <div class="sal-title">Product Management (Technical PM)</div>
+      <div class="sal-range">$150K–$400K · Highest non-engineering role in tech</div>
+      <div class="sal-senior">APM programs at Google/Meta are the most competitive entry points</div>
+      <div class="sal-why">PMs at big tech (Google APM, Meta RPM, Microsoft PM Rotation) are among the highest-paid non-engineering roles. For an entrepreneur, this IS the job — deciding what to build and why. Your combination of technical ML background + leadership + writing skills is literally the definition of a strong PM profile. DECA prepares you for exactly this kind of cross-functional business thinking.</div>
+      <div class="sal-bar-label">10-Year Longevity</div>
+      <div class="sal-bar-track"><div class="sal-bar-fill blue" style="width:88%"></div></div>
+      <div class="sal-bar-label">Demand Growth</div>
+      <div class="sal-bar-track"><div class="sal-bar-fill gold" style="width:82%"></div></div>
+    </div>
+
+    <div class="salary-card">
+      <div class="sal-rank">04 · UNCAPPED UPSIDE</div>
+      <div class="sal-title">Sales / Business Development (Tech)</div>
+      <div class="sal-range">$100K–$500K+ · Commission-driven, no ceiling</div>
+      <div class="sal-senior">Enterprise AI sales reps regularly earn $300K+ total comp</div>
+      <div class="sal-why">The dirtiest secret in tech: the best seller earns more than most engineers. Enterprise software and AI sales routinely pay $200–400K in total comp. As an entrepreneur, sales IS your survival. You already have communication and leadership strengths — systematizing those into B2B sales skills gives you an unfair advantage. Most technical people refuse to learn sales. That's your opportunity.</div>
+      <div class="sal-bar-label">10-Year Longevity</div>
+      <div class="sal-bar-track"><div class="sal-bar-fill green" style="width:95%"></div></div>
+      <div class="sal-bar-label">Income Ceiling</div>
+      <div class="sal-bar-track"><div class="sal-bar-fill gold" style="width:100%"></div></div>
+    </div>
+
+    <div class="salary-card">
+      <div class="sal-rank">05 · FOUNDER ESSENTIAL</div>
+      <div class="sal-title">Full-Stack Development + AI Integration</div>
+      <div class="sal-range">$120K–$300K · Essential for solo founders</div>
+      <div class="sal-senior">AI-augmented full-stack devs commanding 21% salary premium</div>
+      <div class="sal-why">Coursera's 2026 data: professionals with AI skills (even in non-AI roles) earn 21% more than peers. Full-stack development with AI integration — React/Next.js front end, Python/FastAPI back end, and AI API integration — lets you build a complete product alone. As a founder, this means you can validate ideas before hiring anyone. Every hour you spend on web dev pays dividends every time you have a new idea to test.</div>
+      <div class="sal-bar-label">10-Year Longevity</div>
+      <div class="sal-bar-track"><div class="sal-bar-fill blue" style="width:80%"></div></div>
+      <div class="sal-bar-label">Founder Utility</div>
+      <div class="sal-bar-track"><div class="sal-bar-fill green" style="width:100%"></div></div>
+    </div>
+
+    <div class="salary-card">
+      <div class="sal-rank">06 · FINANCIAL FREEDOM AXIS</div>
+      <div class="sal-title">Financial Literacy + VC / Startup Finance</div>
+      <div class="sal-range">Unlocks millions in capital · Essential for founders</div>
+      <div class="sal-senior">Founders who understand cap tables don't get taken advantage of</div>
+      <div class="sal-why">Understanding personal finance, investing, cap tables, term sheets, unit economics, and how VC funding works is not taught anywhere in school — and not knowing it costs founders millions. Given your financial freedom motivation, this should be a parallel track from day one. Start with personal finance basics (how compound interest works, index funds, tax-advantaged accounts) and build up to startup finance in college.</div>
+      <div class="sal-bar-label">10-Year Value</div>
+      <div class="sal-bar-track"><div class="sal-bar-fill gold" style="width:98%"></div></div>
+      <div class="sal-bar-label">Rarity Among Founders</div>
+      <div class="sal-bar-track"><div class="sal-bar-fill green" style="width:85%"></div></div>
+    </div>
+
+  </div>
+
+  <div class="big-q">In 2026, the global demand for AI talent exceeds supply by <em>3.2 to 1</em>. You are 14 years old and already learning linear algebra. You will be hiring other people.
+  </div>
+</div>
+
+<!-- ==================== SECTION 7: BOOKS ==================== -->
+<div id="books" class="section">
+  <div class="sec-head">
+    <div class="sec-label">07 · Reading List</div>
+    <div class="sec-title">Books That Change How You Think</div>
+    <p class="sec-desc">Sequenced for your exact profile — financially motivated, AI-focused, entrepreneurship-driven. One book at a time, starting with the ones marked READ NOW.</p>
+  </div>
+
+  <div class="infobox">
+    <strong>How to read these:</strong> 30 minutes every morning before you open your laptop. Take notes — n
